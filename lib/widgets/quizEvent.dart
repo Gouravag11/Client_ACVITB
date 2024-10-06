@@ -52,6 +52,7 @@ class _QuizEventPageState extends State<QuizEventPage> {
   bool answered = false;
   String timerText = 'Starting in:';
   int? _selectedOptionIndex; // Track selected option
+  bool _showResult = false;
 
 
   late Timer _questionTimer;
@@ -119,22 +120,21 @@ class _QuizEventPageState extends State<QuizEventPage> {
       final activeQ = event.snapshot.value as String?;
       setState(() {
         _activeQuestion = activeQ;
+        _showResult = false;
       });
       if (activeQ != null && activeQ != '-1' && activeQ != '-2') {
         setState(() {
           _showOptions = false;
-
-          timerText = 'Starting in:';
         });
         _startTime = DateTime.now().millisecondsSinceEpoch;
         _timerService.getQuestionRemainingTime().listen((remainingTime) {
           setState(() {
             _remainingQuestionTime = remainingTime;
+            _showResult = false;
             if (_remainingQuestionTime == 0) {
               answered = false;
               _selectedOptionIndex = null;
               _showOptions = true;
-              timerText = 'Time Remaining';
             }
           });
         });
@@ -142,8 +142,10 @@ class _QuizEventPageState extends State<QuizEventPage> {
         _timerService.getOptionRemainingTime().listen((remainingTime) {
           setState(() {
             _remainingOptionTime = remainingTime;
+            _showResult = false;
           if (_remainingOptionTime == 0) {
             _showOptions = false;
+            _showResult = true;
           }
           });
         });
@@ -207,7 +209,8 @@ class _QuizEventPageState extends State<QuizEventPage> {
   }
 
   Future<void> _updateUserScore(int score) async {
-    final currentScore = (_quizData?['participants'][userPID]['score']  ?? 0) as int;
+    final snapshot = await _quizRef.child('${widget.quizId}/participants/$userPID').once();
+    final currentScore = ((snapshot.snapshot.value as Map?)?['score'] ?? 0) as int;
     final newScore = currentScore + score;
     await _quizRef.child('${widget.quizId}/participants/$userPID/score').set(newScore);
   }
@@ -226,63 +229,85 @@ class _QuizEventPageState extends State<QuizEventPage> {
           : _showLeaderboards
             ?_buildLeaderboardsPage()
             :Column(
-              children: [
-                Expanded(
-                  child: _activeQuestion == '-1'
-                      ? const Center(
-                    child: Text(
-                      "Waiting for quiz to start...",
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                      : _activeQuestion == '-2'
-                      ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Quiz Ended", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  )
-                      : Column(
-                    children: [
-                      _remainingQuestionTime != 0
-                        ? Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Starting in:',
-                              style: GoogleFonts.poppins(fontSize: 18),
-                            ),
-                            Text(
-                              "$_remainingQuestionTime",
-                              style: GoogleFonts.poppins(fontSize: 24),
-                            ),
-                          ],
-                        )
-                      )
-                        : Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Time Remaining',
-                              style: GoogleFonts.poppins(fontSize: 18),
-                            ),
-                            Text(
-                              "$_remainingOptionTime",
-                              style: GoogleFonts.poppins(fontSize: 24),
-                            ),
-                          ],
-                        )
-                      ),
-
-                      _buildQuestionView()
-                    ],
+        children: [
+          Expanded(
+            child: _activeQuestion == '-1'
+                ? const Center(
+              child: Text(
+                "Waiting for quiz to start...",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            )
+                : _activeQuestion == '-2'
+                ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Quiz Ended", style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 15,),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("Exit", style: GoogleFonts.poppins(fontSize: 24),),
                   ),
+                ],
+              ),
+            )
+                : Column(
+              children: [
+                _remainingQuestionTime != 0
+                    ? Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Starting in:',
+                          style: GoogleFonts.poppins(fontSize: 14),
+                        ),
+                        Text(
+                          "$_remainingQuestionTime",
+                          style: GoogleFonts.poppins(fontSize: 24),
+                        ),
+                      ],
+                    )
+                )
+                    : Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Time Remaining',
+                          style: GoogleFonts.poppins(fontSize: 14),
+                        ),
+                        Text(
+                          "$_remainingOptionTime",
+                          style: GoogleFonts.poppins(fontSize: 24),
+                        ),
+                      ],
+                    )
                 ),
+
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Divider(),
+                ),
+
+                Expanded(
+                  child: _showResult
+                    ? Center(
+                      child: SingleChildScrollView(
+                        child: _buildResultView(),
+                      ),
+                    )
+                  : _buildQuestionView(),
+                ),
+
+
               ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -326,11 +351,21 @@ class _QuizEventPageState extends State<QuizEventPage> {
     final currentQuestion = _questions[int.parse(_activeQuestion!)];
     return [
       Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          "Question: ${currentQuestion['question']}",
-          style: const TextStyle(fontSize: 18),
-        ),
+        padding: const EdgeInsets.all(10.0),
+        child: Center(
+          child: Text(
+            currentQuestion['question'],
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.bold
+            ),
+          ),
+        )
+      ),
+
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 45),
+        child: Divider(),
       ),
 
       if (_showOptions)
@@ -369,6 +404,12 @@ class _QuizEventPageState extends State<QuizEventPage> {
             "Leaderboards",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
+          const SizedBox(height: 5,),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 45),
+            child: Divider(),
+          ),
+          const SizedBox(height: 5,),
           const SizedBox(height: 16),
           Expanded(
             child: HorizontalBarChart(participants: _fetchParticipants()),
@@ -377,13 +418,76 @@ class _QuizEventPageState extends State<QuizEventPage> {
       ),
     );
   }
+
   List<Participant> _fetchParticipants() {
     if (_participants == null) return [];
 
-    return _participants!.entries.map((entry) {
+    List<MapEntry<String, dynamic>> sortedParticipants = _participants!.entries.toList();
+    sortedParticipants.sort((a, b) => (b.value['score'] as int).compareTo(a.value['score'] as int));
+
+    return sortedParticipants.take(10).map((entry) {
       final participantData = entry.value;
       return Participant(participantData['name'], participantData['score']);
     }).toList();
+  }
+
+
+  Widget _buildResultView() {
+    final currentQuestion = _questions[int.parse(_activeQuestion!)];
+
+    if (_selectedOptionIndex == null) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 15,),
+          Text(
+            'Time\'s up!',
+            style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 15,),
+          Text(
+            'You did not answer this question.',
+            style: GoogleFonts.poppins(fontSize: 16),
+          ),
+        ],
+      );
+    } else {
+      final isCorrect = currentQuestion['options'][_selectedOptionIndex]['isCorrect'] as bool;
+
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 15,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+              isCorrect ? 'Correct!' : 'Incorrect !!!',
+              style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 20,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Column(children: [
+              if(isCorrect)
+                Text(
+                  'You answered correctly!',
+                  style: GoogleFonts.poppins(fontSize: 16),
+                ),
+              if(!isCorrect)
+                Text('The correct answer is:',style: GoogleFonts.poppins(fontSize: 16)),
+              Text(
+                  '${currentQuestion['options'][currentQuestion['options'].indexWhere((option) => option['isCorrect'] as bool)]['text']}',
+                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)
+              )
+            ],)
+          ),
+
+        ],
+      );
+    }
   }
 
   @override

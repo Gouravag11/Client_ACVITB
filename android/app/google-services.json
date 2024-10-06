@@ -75,14 +75,6 @@
           }
         },
         {
-          "client_id": "845947477263-skvos7hgkn6g4mof11qr7ja9gtrsvrt6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.androidclubapp.vitbpl",
-            "certificate_hash": "af80d73b400b7c6a8efb8195b53f8f008d4c058d"
-          }
-        },
-        {
           "client_id": "845947477263-si0ekuub0pk69097bhpor7bggot7vs82.apps.googleusercontent.com",
           "client_type": 3
         }
