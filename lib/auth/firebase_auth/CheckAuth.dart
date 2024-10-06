@@ -1,6 +1,6 @@
 
 import 'package:android_club_app/pages/my_events.dart';
-import 'package:android_club_app/pages/splash_page.dart';
+import 'package:android_club_app/widgets/splash_page.dart';
 import 'package:android_club_app/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

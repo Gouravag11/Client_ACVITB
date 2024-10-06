@@ -64,15 +64,18 @@ class _UserInfoPageState extends State<UserInfoPage> {
                   // Name
                   Text(
                     _user!.name,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   // Email
                   Text(
                     _user!.email,
-                    style: TextStyle(
-                      fontSize: 15,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
                       color: Colors.grey[600],
                     ),
                     textAlign: TextAlign.center,
@@ -81,7 +84,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                   // Bio
                   Text(
                     _user!.regNo,
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 18,
                       color: Colors.grey[600],
                     ),
@@ -152,7 +155,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                     padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 0, 0),
                                     child: Text(
                                       'My Events',
-                                      style: Theme.of(context).textTheme.titleMedium,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -196,7 +202,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                     padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 0, 0),
                                     child: Text(
                                       'Event Gallery',
-                                      style: Theme.of(context).textTheme.titleMedium,
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -242,7 +251,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                     padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 0, 0),
                                     child: Text(
                                       'About Us',
-                                      style: Theme.of(context).textTheme.titleMedium,
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500
+                                      ),
                                     ),
                                   ),
 
@@ -287,7 +299,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                     padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 0, 0),
                                     child: Text(
                                       'Share Us',
-                                      style: Theme.of(context).textTheme.titleMedium,
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -332,9 +347,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                         onPressed: () async {
                                           Navigator.pop(context);
                                           await FirebaseAuth.instance.signOut();
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => const CheckAuth()),
+                                          Navigator.of(context).pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                  builder: (context) => const CheckAuth()),
+                                                  (Route route) => false
                                           );
                                         },
                                         child: Text(
@@ -369,7 +385,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                     padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 0, 0),
                                     child: Text(
                                       'Logout',
-                                      style: Theme.of(context).textTheme.titleMedium,
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500
+                                      ),
                                     ),
                                   ),
                                 ],

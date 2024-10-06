@@ -1,14 +1,12 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
+import 'package:android_club_app/pages/poll_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class PollOption {
-  String optionId;
-  String option;
-  int value;
-
-  PollOption(
-      {required this.optionId, required this.option, required this.value});
-}
+import '../widgets/app_bar.dart';
 
 class PollsPage extends StatefulWidget {
   const PollsPage({super.key});
@@ -18,83 +16,134 @@ class PollsPage extends StatefulWidget {
 }
 
 class _PollsPageState extends State<PollsPage> {
-  final databaseReference = FirebaseDatabase.instance.ref();
-  List<PollOption> pollOptions = [];
-  Map<String, int> votes = {};
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _roomCodeController = TextEditingController();
+
+  Future<bool> checkRoomExists(String roomCode) async {
+    DatabaseReference reference =
+    FirebaseDatabase.instance.ref('polls/$roomCode');
+    try {
+      DataSnapshot snapshot = await reference.get();
+
+      if (snapshot.exists) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PollScreen(
+              roomCode: roomCode,
+              name: _nameController.text,
+            ),
+          ),
+        );
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Room Code does not exist')),
+        );
+        return false;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('ERROR' + e.toString())),
+      );
+      return false;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    databaseReference.child('polls').once().then((DatabaseEvent event) {
-      DataSnapshot snapshot = event.snapshot;
-      if (snapshot.value != null) {
-        Map<String, dynamic> pollData = snapshot.value as Map<String, dynamic>;
-        pollData.forEach((key, value) {
-          pollOptions.add(PollOption(
-            optionId: key,
-            option: value['option'],
-            value: value['votes'],
-          ));
-          votes[key] = value['votes'];
-        });
-        setState(() {});
-      }
-    });
-  }
-
-  void _voteForOption(String optionId) {
-    databaseReference
-        .child('polls')
-        .child(optionId)
-        .runTransaction((Object? transaction) {
-      if (transaction != null) {
-        // Assuming transaction is a Map<String, dynamic>
-        Map<String, dynamic> currentData =
-            Map<String, dynamic>.from(transaction as Map);
-        int currentVotes = currentData['votes'] ?? 0;
-        currentData['votes'] = currentVotes + 1;
-        return Transaction.success(currentData);
-      } else {
-        // If transaction is null, set the initial vote count to 1
-        Map<String, dynamic> newData = {'votes': 1};
-        return Transaction.success(newData);
-      }
-    }).then((transactionResult) {
-      if (transactionResult.committed) {
-        setState(() {
-          votes[optionId] = (votes[optionId] ?? 0) + 1;
-        });
-      }
-    }).catchError((error) {
-      // Handle any error that occurs during the transaction
-      print('Transaction failed: $error');
-    });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null && user.displayName != null) {
+      _nameController.text = user.displayName!;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Polls'),
+      appBar: AndroAppBar(
+        pageTitle: 'Quiz Manager',
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: pollOptions.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(pollOptions[index].option),
-                  trailing: Text('${pollOptions[index].value} votes'),
-                  onTap: () {
-                    _voteForOption(pollOptions[index].optionId);
-                  },
-                );
-              },
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Enter a Room",
+              style: GoogleFonts.poppins(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w500),
             ),
-          ),
-          Text('Total votes: ${votes.isNotEmpty ? votes.values.reduce((a, b) => a + b) : 0}'),
-        ],
+            SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: TextField(
+                    controller: _nameController,
+                    style: GoogleFonts.poppins(),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Name',
+                      hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: TextField(
+                    controller: _roomCodeController,
+                    style: GoogleFonts.poppins(),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Room Code',
+                      hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35.0),
+              child: GestureDetector(
+                onTap: () async {
+                  await checkRoomExists(_roomCodeController.text);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Center(
+                        child: Text(
+                          "ENTER ROOM",
+                          style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16),
+                        )),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

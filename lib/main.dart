@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'auth/firebase_auth/CheckAuth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:android_club_app/models/user.dart';
+import 'package:android_club_app/widgets/splash_page.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const CheckAuth(),
+      home: SplashPage(),
       theme: lightMode,
       darkTheme: darkMode,
     );

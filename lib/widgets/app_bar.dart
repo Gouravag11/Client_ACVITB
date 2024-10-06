@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:android_club_app/widgets/animation_custom1.dart';
 import 'package:android_club_app/pages/user_info_page.dart';
 import 'package:android_club_app/pages/ranking_page.dart';
+import 'package:android_club_app/pages/quiz_page.dart';
 import 'package:android_club_app/models/user.dart';
 import 'package:android_club_app/auth/user_data_manager.dart';
 
@@ -13,6 +14,7 @@ import 'package:android_club_app/auth/user_data_manager.dart';
 class AndroAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String pageTitle;
   final bool isHomePage;
+  final bool showIcons;
   final bool clickableIcons;
   final bool showBack;
 
@@ -20,6 +22,7 @@ class AndroAppBar extends StatefulWidget implements PreferredSizeWidget {
     Key? key,
     required this.pageTitle,
     this.isHomePage = false,
+    this.showIcons = true,
     this.clickableIcons = true,
     this.showBack = false,
 
@@ -166,7 +169,6 @@ class _CustomAppBarState extends State<AndroAppBar> {
                     ],
                   ),
                 ),
-                // Profile Avatar
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
@@ -232,7 +234,8 @@ class _CustomAppBarState extends State<AndroAppBar> {
                       ],
                     ),
                   ),
-                ),
+                )
+                // Profile Avatar
               ],
             ),
           ),

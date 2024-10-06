@@ -1,10 +1,55 @@
 {
   "project_info": {
     "project_number": "845947477263",
+    "firebase_url": "https://android-club-65a70-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "android-club-65a70",
     "storage_bucket": "android-club-65a70.appspot.com"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845947477263:android:2a56e7f8db2e6b65c1327a",
+        "android_client_info": {
+          "package_name": "com.acvitb.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "845947477263-1jbdmd446f4vgrm1rc11mahs30p019sc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.acvitb.admin",
+            "certificate_hash": "af80d73b400b7c6a8efb8195b53f8f008d4c058d"
+          }
+        },
+        {
+          "client_id": "845947477263-si0ekuub0pk69097bhpor7bggot7vs82.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxv-m7Enu85kKsbrk5PZw8HGQ8GxHhcaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "845947477263-si0ekuub0pk69097bhpor7bggot7vs82.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "845947477263-834d1nm26kebp4epoi0ijqj47dilvfrj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.androidclubapp.vitbpl"
+              }
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:845947477263:android:6a89a3bfba8b0790c1327a",
@@ -19,6 +64,14 @@
           "android_info": {
             "package_name": "com.androidclubapp.vitbpl",
             "certificate_hash": "2d39366326e28f261e99c10bd4c01cb07075e555"
+          }
+        },
+        {
+          "client_id": "845947477263-hlj2j0g9bnl9pkfn2gd4o7sbp2ag07uf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.androidclubapp.vitbpl",
+            "certificate_hash": "058eea6e39ed0365736a3bc758012002b527c848"
           }
         },
         {

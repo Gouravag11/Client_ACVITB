@@ -36,7 +36,6 @@ class AboutUs extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 18.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -71,7 +70,6 @@ class AboutUs extends StatelessWidget {
                         style: GoogleFonts.montserrat(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
                         ),
                       ),
                       Text(
@@ -79,7 +77,6 @@ class AboutUs extends StatelessWidget {
                         style: GoogleFonts.lato(
                           fontSize: 18,
                           fontStyle: FontStyle.italic,
-                          color: Colors.black54,
                         ),
                       ),
                     ],
@@ -91,7 +88,6 @@ class AboutUs extends StatelessWidget {
                 bio,
                 style: GoogleFonts.openSans(
                   fontSize: 16,
-                  color: Colors.black87,
                 ),
               ),
               const SizedBox(height: 12),
@@ -179,7 +175,7 @@ class AboutUs extends StatelessWidget {
               Text(
                 'Welcome to the Android Club',
                 style: GoogleFonts.montserrat(
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -202,14 +198,35 @@ class AboutUs extends StatelessWidget {
                 style: GoogleFonts.openSans(fontSize: 16),
               ),
               const SizedBox(height: 20),
-              Text(
-                'Club Members',
-                style: GoogleFonts.montserrat(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Container(
+                      width: 50,
+                      height: 2,
+                      decoration: BoxDecoration(color: Theme.of(context).colorScheme.inversePrimary),
+                    ),
+                  ),
+                  Text(
+                    'The Heads',
+                    style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.2
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Container(
+                      width: 50,
+                      height: 2,
+                      decoration: BoxDecoration(color: Theme.of(context).colorScheme.inversePrimary),
+                    ),
+                  ),
+                ],
               ),
-              const Divider(),
 
               // Admin Members
               buildMember(
@@ -243,7 +260,35 @@ class AboutUs extends StatelessWidget {
                 profilePicture: 'assets/images/Avyaan.jpg',
               ),
 
-              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Container(
+                      width: 50,
+                      height: 2,
+                      decoration: BoxDecoration(color: Theme.of(context).colorScheme.inversePrimary),
+                    ),
+                  ),
+                  Text(
+                    'Club Leads',
+                    style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.2
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Container(
+                      width: 50,
+                      height: 2,
+                      decoration: BoxDecoration(color: Theme.of(context).colorScheme.inversePrimary),
+                    ),
+                  ),
+                ],
+              ),
 
               // Executive Board Members
               buildMember(

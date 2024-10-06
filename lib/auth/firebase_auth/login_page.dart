@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
 import 'package:android_club_app/auth/firebase_auth/firebase_auth_implement.dart';
 import 'package:android_club_app/auth/firebase_auth/signup_page.dart';
 import 'package:android_club_app/auth/firebase_auth/AuthService.dart';
 import 'package:android_club_app/auth/firebase_auth/CheckAuth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -49,15 +52,19 @@ class _LoginPageState extends State<LoginPage> {
               // Icon
               Icon(
                 Icons.android,
-                size: 90.0,
-                color: Theme.of(context).colorScheme.inversePrimary,
+                size: 100.0,
+                color: Colors.green,
               ),
 
-              // spacing between
-              SizedBox(height: 10.0),
-
               // Intro Text
-              Text("Welcome to Android Club!"),
+              Text("HELLO THERE!",
+                  style: GoogleFonts.bebasNeue(
+                      fontSize: 58)),
+
+              Text(
+                "Welcome to Android Club App!",
+                style: TextStyle(fontSize: 16),
+              ),
 
               // spacing between
               SizedBox(height: 20.0),
@@ -110,21 +117,18 @@ class _LoginPageState extends State<LoginPage> {
                 onTap: login,
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                  width: 110,
-                  height: 45,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 18.0),
-                      child: Text(
-                        "Log In",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary),
-                      ),
-                    ),
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Center(
+                        child: Text(
+                          "SIGN IN",
+                          style: GoogleFonts.poppins(
+                            // color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        )),
                   ),
                 ),
               ),
@@ -132,8 +136,28 @@ class _LoginPageState extends State<LoginPage> {
               // Spacing
               SizedBox(height: 15.0),
 
-              // Other Login Methods Text
-              Text("Or Continue With"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("First time here? ",
+                      style: GoogleFonts.poppins(
+                      fontSize: 16)),
+                  GestureDetector(
+                    onTap: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const SignupPage())
+                      )
+                    },
+                    child: Text(
+                      "Register now",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                  )
+                ],
+              ),
 
               // Spacing
               SizedBox(height: 15.0),
@@ -150,9 +174,9 @@ class _LoginPageState extends State<LoginPage> {
                         MaterialPageRoute(builder: (context) => CheckAuth()),
                       );
                     },
-                    child: ImageIcon(
-                      AssetImage('assets/images/google_logo.png'),
-                      size: 50,
+                    child: Image.asset(
+                      'assets/images/google_logo.png',
+                      width: 50,
                     ),
                   ),
                   SizedBox(width: 10,),
@@ -164,9 +188,9 @@ class _LoginPageState extends State<LoginPage> {
                         MaterialPageRoute(builder: (context) => CheckAuth()),
                       );
                     },
-                    child: ImageIcon(
-                      AssetImage('assets/images/github_logo.png'),
-                      size: 50,
+                    child: Image.asset(
+                      'assets/images/github_logo.png',
+                      width: 50,
                     ),
                   ),
                 ],
@@ -176,26 +200,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 15.0),
 
               // Register Now redirect
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("First time here? "),
-                  GestureDetector(
-                    onTap: () => {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const SignupPage())
-                      )
-                    },
-                    child: Text(
-                      "Register now",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ],
-              )
+
             ],
           ),
         ),

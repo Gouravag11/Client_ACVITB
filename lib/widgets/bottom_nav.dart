@@ -1,6 +1,12 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
+import 'package:android_club_app/pages/about_us_page.dart';
 import 'package:android_club_app/pages/home_page.dart';
 import 'package:android_club_app/pages/polls_page.dart';
-import 'package:android_club_app/pages/merch_page.dart';
+import 'package:android_club_app/pages/quiz_page.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
@@ -11,100 +17,57 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
-  int selectedIndex = 1;
-
-  PageController pageController = PageController(initialPage: 1);
-
-  List<Widget> widgets = [
-    const Text('Home'),
-    const Text('Polls'),
-    const Text('Merch'),
-  ];
-
-  void onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-    pageController.jumpToPage(index);
-  }
+  // List of Screens
+  List screens = [QuizPage(), HomePage(), PollsPage()];
+  int _selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          PageView(
-            controller: pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: const [
-
-              PollsPage(),
-              HomePage(),
-              MerchPage(),
-            ],
+      bottomNavigationBar: CurvedNavigationBar(
+        index: 1,
+        backgroundColor: Colors.transparent,
+        color: Theme.of(context).colorScheme.background,
+        animationDuration: Duration(milliseconds: 400),
+        items: [
+          CurvedNavigationBarItem(
+              child: Icon(
+                Icons.quiz_outlined,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFb9d98d) // For dark mode
+                    : const Color(0xFF222222),
+              ),
+              label: "Qwiz",
+              labelStyle: GoogleFonts.poppins(),
           ),
-          Positioned(
-            left: 20,
-            right: 20,
-            bottom: 20,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10.0,
-                  ),
-                ],
+          CurvedNavigationBarItem(
+              child: Icon(
+                Icons.home,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFb9d98d) // For dark mode
+                    : const Color(0xFF222222),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: BottomNavigationBar(
-                  items: const <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                        icon: Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Icon(Icons.poll_outlined),
-                        ),
-                        activeIcon: Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Icon(Icons.poll),
-                        ),
-                        label: 'Polls'),
-                    BottomNavigationBarItem(
-                        icon: Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Icon(Icons.home_outlined),
-                        ),
-                        activeIcon: Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Icon(Icons.home),
-                        ),
-                        label: 'Home'),
-                    BottomNavigationBarItem(
-                        icon: Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Icon(Icons.shopping_bag_outlined),
-                        ),
-                        activeIcon: Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Icon(Icons.shopping_bag),
-                        ),
-                        label: 'Merch'),
-                  ],
-                  currentIndex: selectedIndex,
-                  selectedItemColor: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFFb9d98d) // For dark mode
-                      : const Color(0xFF222222),
-                  unselectedItemColor: Theme.of(context).colorScheme.inversePrimary,
-                  onTap: onItemTapped,
-                  backgroundColor: Theme.of(context).colorScheme.surface, // Change color to your desired color
-                ),
+              label: "Home",
+              labelStyle: GoogleFonts.poppins(),
+          ),
+          CurvedNavigationBarItem(
+              child: Icon(
+                Icons.poll_outlined,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFb9d98d) // For dark mode
+                    : const Color(0xFF222222),
               ),
-            ),
+              label: "Polls",
+              labelStyle: GoogleFonts.poppins(),
           ),
         ],
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
+      body: screens[_selectedIndex],
     );
   }
 }
