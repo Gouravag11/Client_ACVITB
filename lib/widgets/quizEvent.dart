@@ -217,7 +217,7 @@ class _QuizEventPageState extends State<QuizEventPage> {
     return Scaffold(
       appBar: AndroAppBar(
         pageTitle: '${_quizData?['title'] ?? ''}',
-        showIcons: false,
+        clickableIcons: false,
       ),
       body: _isLoading
         ? const Center(child: CircularProgressIndicator())
