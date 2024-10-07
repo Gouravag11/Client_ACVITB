@@ -44,7 +44,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1C3427), // Set your custom background color
+      backgroundColor: const Color(0xFF1D3528), // Set your custom background color
       body: Center(
         child: _controller.value.isInitialized
             ? AspectRatio(
